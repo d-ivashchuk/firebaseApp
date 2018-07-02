@@ -1,5 +1,10 @@
 import React from 'react';
+import styled from 'styled-components';
+import { auth } from '../../firebase/index.js';
 
-const signOut = props => <h1>Sign out</h1>;
+const StyledButton = styled.button``;
+const signOut = props => (
+  <StyledButton onClick={auth.doSignOut}>Sign Out</StyledButton>
+);
 
 export default signOut;

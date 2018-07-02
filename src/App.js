@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { injectGlobal } from 'styled-components';
 import { BrowserRouter, Route } from 'react-router-dom';
+import { firebase } from './firebase/index.js';
 
 import * as routes from './constants/routes.js';
 
@@ -21,11 +22,22 @@ padding: 0;
 `;
 
 class App extends Component {
+  state = {
+    authUser: null
+  };
+  componentDidMount() {
+    firebase.auth.onAuthStateChanged(authUser => {
+      authUser
+        ? this.setState(() => ({ authUser }))
+        : this.setState(() => ({ authUser: null }));
+    });
+  }
+
   render() {
     return (
       <BrowserRouter>
         <div className="App">
-          <Navigation />
+          <Navigation authUser={this.state.authUser} />
           <Route exact path={routes.LANDING} component={Landing} />
           <Route exact path={routes.SIGN_UP} component={SignUp} />
           <Route exact path={routes.SIGN_IN} component={SignIn} />

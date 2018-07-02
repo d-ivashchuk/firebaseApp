@@ -1,5 +1,13 @@
 import React from 'react';
+import { withRouter } from 'react-router-dom';
+import SignInForm from './SignInForm/SignInForm.js';
+import SignUpLink from '../SignUp/SignUpForm/SignUpLink/SignUpLink.js';
 
-const signIn = props => <h1>Sign in</h1>;
+const signIn = ({ history }) => (
+  <React.Fragment>
+    <SignInForm history={history} />
+    <SignUpLink />
+  </React.Fragment>
+);
 
-export default signIn;
+export default withRouter(signIn);

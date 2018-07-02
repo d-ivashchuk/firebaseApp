@@ -1,11 +1,12 @@
-import React from 'react';
-import styled from 'styled-components';
+import React, { Component } from 'react';
 import { auth } from '../../../firebase/index.js';
 import * as routes from '../../../constants/routes.js';
+import styled from 'styled-components';
 
 const StyledForm = styled.form`
   width: 300px;
   margin: auto;
+  margin-top: 3rem;
   border-radius: 6px;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 `;
@@ -18,6 +19,7 @@ const StyledInput = styled.input`
   border: 0;
   outline: 0;
 `;
+
 const StyledButton = styled.button`
   display: block;
   font-size: 1em;
@@ -45,55 +47,38 @@ const byPropKey = (propertyName, value) => () => ({
 });
 
 const INITIAL_STATE = {
-  username: '',
   email: '',
-  passwordOne: '',
-  passwordTwo: '',
+  password: '',
   error: null
 };
 
-class SignUpForm extends React.Component {
+class SignInForm extends Component {
   state = {
     ...INITIAL_STATE
   };
 
   onSubmit = event => {
-    const { username, email, passwordOne } = this.state;
+    const { email, password } = this.state;
     const { history } = this.props;
 
     auth
-      .doCreateUserWithEmailAndPassword(email, passwordOne)
-      .then(authUser => {
+      .doSignInWithEmailAndPassword(email, password)
+      .then(() => {
         this.setState(() => ({ ...INITIAL_STATE }));
         history.push(routes.HOME);
       })
       .catch(error => {
         this.setState(byPropKey('error', error));
       });
-
-    this.setState({ ...INITIAL_STATE });
     event.preventDefault();
   };
 
   render() {
-    const { username, email, passwordOne, passwordTwo, error } = this.state;
-
-    const isInvalid =
-      passwordOne !== passwordTwo ||
-      passwordOne === '' ||
-      email === '' ||
-      username === '';
+    const { email, password, error } = this.state;
+    const isInvalid = password === '' || email === '';
 
     return (
       <StyledForm onSubmit={this.onSubmit}>
-        <StyledInput
-          value={username}
-          onChange={event =>
-            this.setState(byPropKey('username', event.target.value))
-          }
-          type="text"
-          placeholder="Full Name"
-        />
         <StyledInput
           value={email}
           onChange={event =>
@@ -103,23 +88,15 @@ class SignUpForm extends React.Component {
           placeholder="Email Address"
         />
         <StyledInput
-          value={passwordOne}
+          value={password}
           onChange={event =>
-            this.setState(byPropKey('passwordOne', event.target.value))
+            this.setState(byPropKey('password', event.target.value))
           }
           type="password"
           placeholder="Password"
         />
-        <StyledInput
-          value={passwordTwo}
-          onChange={event =>
-            this.setState(byPropKey('passwordTwo', event.target.value))
-          }
-          type="password"
-          placeholder="Confirm Password"
-        />
         <StyledButton disabled={isInvalid} type="submit">
-          Sign Up
+          Sign In
         </StyledButton>
 
         {error && <p>{error.message}</p>}
@@ -128,4 +105,4 @@ class SignUpForm extends React.Component {
   }
 }
 
-export default SignUpForm;
+export default SignInForm;
