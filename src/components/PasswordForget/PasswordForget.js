@@ -1,5 +1,11 @@
 import React from 'react';
+import PasswordForgetForm from './PasswordForgetForm/PasswordForgetForm.js';
 
-const passwordForget = props => <h1>Pass forget</h1>;
+const passwordForget = props => (
+  <React.Fragment>
+    <h1>Password Forget</h1>
+    <PasswordForgetForm />
+  </React.Fragment>
+);
 
 export default passwordForget;

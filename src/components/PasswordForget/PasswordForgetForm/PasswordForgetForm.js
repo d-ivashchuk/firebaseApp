@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-import { auth } from '../../../firebase/index.js';
-import * as routes from '../../../constants/routes.js';
 import styled from 'styled-components';
+import { auth } from '../../../firebase/index.js';
 
 const StyledForm = styled.form`
   width: 300px;
   margin: auto;
-  margin-top: 3rem;
   border-radius: 6px;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 `;
@@ -19,7 +17,6 @@ const StyledInput = styled.input`
   border: 0;
   outline: 0;
 `;
-
 const StyledButton = styled.button`
   display: block;
   font-size: 1em;
@@ -41,77 +38,54 @@ const StyledButton = styled.button`
     cursor: not-allowed;
   }
 `;
-const StyledErrorMessage = styled.div`
-  padding: 1em;
-  text-align: center;
-  color: #ff545e;
-`;
 
 const byPropKey = (propertyName, value) => () => ({
   [propertyName]: value
 });
-
 const INITIAL_STATE = {
   email: '',
-  password: '',
   error: null
 };
 
-class SignInForm extends Component {
+class PasswordForgetForm extends Component {
   state = {
     ...INITIAL_STATE
   };
 
   onSubmit = event => {
-    const { email, password } = this.state;
-    const { history } = this.props;
-
+    const { email } = this.state;
     auth
-      .doSignInWithEmailAndPassword(email, password)
+      .doPasswordReset(email)
       .then(() => {
         this.setState(() => ({ ...INITIAL_STATE }));
-        history.push(routes.HOME);
       })
       .catch(error => {
         this.setState(byPropKey('error', error));
       });
     event.preventDefault();
   };
-
   render() {
-    const { email, password, error } = this.state;
-    const isInvalid = password === '' || email === '';
+    const { email, error } = this.state;
+    const isInvalid = email === '';
 
     return (
       <StyledForm onSubmit={this.onSubmit}>
         <StyledInput
-          value={email}
+          value={this.state.email}
           onChange={event =>
             this.setState(byPropKey('email', event.target.value))
           }
           type="text"
           placeholder="Email Address"
         />
-        <StyledInput
-          value={password}
-          onChange={event =>
-            this.setState(byPropKey('password', event.target.value))
-          }
-          type="password"
-          placeholder="Password"
-        />
         <StyledButton disabled={isInvalid} type="submit">
-          Sign In
+          Reset My Password
         </StyledButton>
 
-        {error && (
-          <StyledErrorMessage>
-            Password is wrong or user does not exist.
-          </StyledErrorMessage>
-        )}
+        {error && <p>{error.message}</p>}
       </StyledForm>
     );
   }
 }
 
-export default SignInForm;
+export default PasswordForgetForm;

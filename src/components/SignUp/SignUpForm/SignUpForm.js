@@ -39,6 +39,11 @@ const StyledButton = styled.button`
     cursor: not-allowed;
   }
 `;
+const StyledErrorMessage = styled.div`
+  padding: 1em;
+  text-align: center;
+  color: #ff545e;
+`;
 
 const byPropKey = (propertyName, value) => () => ({
   [propertyName]: value
@@ -122,7 +127,7 @@ class SignUpForm extends React.Component {
           Sign Up
         </StyledButton>
 
-        {error && <p>{error.message}</p>}
+        {error && <StyledErrorMessage>{error.message}</StyledErrorMessage>}
       </StyledForm>
     );
   }
