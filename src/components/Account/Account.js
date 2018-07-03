@@ -1,5 +1,18 @@
 import React from 'react';
+import PasswordForget from '../PasswordForget/PasswordForget.js';
+import PasswordChange from '../PasswordChange/PasswordChange.js';
+import AuthUserContext from '../../context/AuthUserContext/AuthUserContext.js';
+import withAuthorization from '../../containers/withAuthorization/withAuthorization.js';
 
-const account = props => <h1>Account</h1>;
+const account = props => (
+  <React.Fragment>
+    <AuthUserContext.Consumer>
+      {authUser => (authUser ? <h3> Email: {authUser.email}</h3> : null)}
+    </AuthUserContext.Consumer>
+    <PasswordForget />
+    <PasswordChange />
+  </React.Fragment>
+);
 
-export default account;
+const authCondition = authUser => !!authUser;
+export default withAuthorization(authCondition)(account);

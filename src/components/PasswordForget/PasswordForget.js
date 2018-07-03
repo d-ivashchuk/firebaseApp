@@ -3,7 +3,7 @@ import PasswordForgetForm from './PasswordForgetForm/PasswordForgetForm.js';
 
 const passwordForget = props => (
   <React.Fragment>
-    <h1>Password Forget</h1>
+    <h2 style={{ textAlign: 'center' }}>Password Forget</h2>
     <PasswordForgetForm />
   </React.Fragment>
 );

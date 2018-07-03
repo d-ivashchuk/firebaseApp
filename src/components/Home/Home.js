@@ -1,5 +1,13 @@
 import React from 'react';
+import withAuthorization from '../../containers/withAuthorization/withAuthorization.js';
 
-const home = props => <h1>home</h1>;
+const home = props => (
+  <React.Fragment>
+    <h1>Home Page</h1>
+    <p>This page is accessible by signed in users</p>
+  </React.Fragment>
+);
 
-export default home;
+const authCondition = authUser => !!authUser;
+
+export default withAuthorization(authCondition)(home);

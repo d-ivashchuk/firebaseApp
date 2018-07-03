@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import styled from 'styled-components';
+
 import { auth } from '../../../firebase/index.js';
 
 const StyledForm = styled.form`
   width: 300px;
   margin: auto;
-  margin-bottom: 30px;
   border-radius: 6px;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 `;
@@ -39,45 +39,56 @@ const StyledButton = styled.button`
     cursor: not-allowed;
   }
 `;
-
 const byPropKey = (propertyName, value) => () => ({
   [propertyName]: value
 });
+
 const INITIAL_STATE = {
-  email: '',
+  passwordOne: '',
+  passwordTwo: '',
   error: null
 };
 
-class PasswordForgetForm extends Component {
-  state = {
-    ...INITIAL_STATE
-  };
+class PasswordChangeForm extends Component {
+  state = { ...INITIAL_STATE };
 
   onSubmit = event => {
-    const { email } = this.state;
+    const { passwordOne } = this.state;
+
     auth
-      .doPasswordReset(email)
+      .doPasswordUpdate(passwordOne)
       .then(() => {
         this.setState(() => ({ ...INITIAL_STATE }));
       })
       .catch(error => {
         this.setState(byPropKey('error', error));
       });
+
     event.preventDefault();
   };
+
   render() {
-    const { email, error } = this.state;
-    const isInvalid = email === '';
+    const { passwordOne, passwordTwo, error } = this.state;
+
+    const isInvalid = passwordOne !== passwordTwo || passwordOne === '';
 
     return (
       <StyledForm onSubmit={this.onSubmit}>
         <StyledInput
-          value={this.state.email}
+          value={passwordOne}
           onChange={event =>
-            this.setState(byPropKey('email', event.target.value))
+            this.setState(byPropKey('passwordOne', event.target.value))
           }
-          type="text"
-          placeholder="Email Address"
+          type="password"
+          placeholder="New Password"
+        />
+        <StyledInput
+          value={passwordTwo}
+          onChange={event =>
+            this.setState(byPropKey('passwordTwo', event.target.value))
+          }
+          type="password"
+          placeholder="Confirm New Password"
         />
         <StyledButton disabled={isInvalid} type="submit">
           Reset My Password
@@ -89,4 +100,4 @@ class PasswordForgetForm extends Component {
   }
 }
 
-export default PasswordForgetForm;
+export default PasswordChangeForm;
