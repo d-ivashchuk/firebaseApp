@@ -7,7 +7,11 @@ import withAuthorization from '../../containers/withAuthorization/withAuthorizat
 const account = props => (
   <React.Fragment>
     <AuthUserContext.Consumer>
-      {authUser => (authUser ? <h3> Email: {authUser.email}</h3> : null)}
+      {authUser =>
+        authUser ? (
+          <h3 style={{ textAlign: 'center' }}> Email: {authUser.email}</h3>
+        ) : null
+      }
     </AuthUserContext.Consumer>
     <PasswordForget />
     <PasswordChange />

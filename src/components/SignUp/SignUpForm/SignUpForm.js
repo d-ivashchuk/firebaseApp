@@ -1,11 +1,12 @@
 import React from 'react';
 import styled from 'styled-components';
-import { auth } from '../../../firebase/index.js';
+import { auth, db } from '../../../firebase/index.js';
 import * as routes from '../../../constants/routes.js';
 
 const StyledForm = styled.form`
   width: 300px;
   margin: auto;
+  margin-top: 20px;
   border-radius: 6px;
   box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
 `;
@@ -14,18 +15,16 @@ const StyledInput = styled.input`
   display: block;
   font-size: 1em;
   padding: 20px;
-  -webkit-appearance: none;
   border: 0;
   outline: 0;
 `;
 const StyledButton = styled.button`
   display: block;
+  margin: 0;
   font-size: 1em;
   width: 100%;
   padding: 20px;
   font-family: 'Roboto';
-  -webkit-appearance: none;
-  outline: 0;
   border: 0;
   color: white;
   background: #10aded;
@@ -69,8 +68,15 @@ class SignUpForm extends React.Component {
     auth
       .doCreateUserWithEmailAndPassword(email, passwordOne)
       .then(authUser => {
-        this.setState(() => ({ ...INITIAL_STATE }));
-        history.push(routes.HOME);
+        db
+          .doCreateUser(authUser.user.uid, username, email)
+          .then(() => {
+            this.setState(() => ({ ...INITIAL_STATE }));
+            history.push(routes.HOME);
+          })
+          .catch(error => {
+            this.setState(byPropKey('error', error));
+          });
       })
       .catch(error => {
         this.setState(byPropKey('error', error));
