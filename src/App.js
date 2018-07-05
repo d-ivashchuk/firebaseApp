@@ -1,6 +1,6 @@
 import React from 'react';
 import { injectGlobal } from 'styled-components';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 // import { firebase } from './firebase/index.js';
 
 import * as routes from './constants/routes.js';
@@ -28,7 +28,14 @@ const App = () => {
     <BrowserRouter>
       <React.Fragment>
         <Navigation />
-        <Route exact path={routes.LANDING} component={Landing} />
+        <Switch>
+          <Route
+            exact
+            path={process.env.PUBLIC_URL + routes.LANDING}
+            component={Landing}
+          />
+          <Route exact path={routes.LANDING} component={Landing} />
+        </Switch>
         <Route exact path={routes.SIGN_UP} component={SignUp} />
         <Route exact path={routes.SIGN_IN} component={SignIn} />
         <Route exact path={routes.PASSWORD_FORGET} component={PasswordForget} />
